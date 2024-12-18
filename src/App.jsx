@@ -74,15 +74,20 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         setUser(user) //En ainakaan tässä vaiheessa keksinyt/ymmärtänyt miten/voiko tämän asettaa komponentissa
         setSuccessMessage(`a new blog ${blogObject.title} by ${blogObject.author} has been added`)
+
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000)
       })
   }
 
-  const addLike = async (id, blogObject) => {
-    await blogService
-            .update(id, blogObject)
+  const addLike = (id, blogObject) => {
+    blogService
+      .update(id, blogObject)
+       .then(updatedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
+        setUser(user)
+       })
   }
 
   const loginForm = () => (
