@@ -19,14 +19,12 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
     setVisible(!visible)
   }
 
-  //Pitäisikö olla App.jsx?
   const handleLike = () => {
     const blogObject = ({
       title: blog.title,
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-      user: blog.user.id //?
     })
     addLike(blog.id, blogObject)
   }
@@ -40,11 +38,11 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+      <div style={hideWhenVisible} className='showOnlyTitleAuthor'>
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>view</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='showEverything'>
         <div>
           {blog.title} {blog.author}
           <button onClick={toggleVisibility}>hide</button>
@@ -67,11 +65,11 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
     </div>
   )}
 
-  Blog.propTypes = {
-    blog: PropTypes.object.isRequired,
-    addLike: PropTypes.func.isRequired,
-    removeBlog: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired
-  }
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  addLike: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
+}
 
 export default Blog
