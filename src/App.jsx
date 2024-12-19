@@ -10,7 +10,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
-  const [username, setUsername] = useState('')   
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   // const [title, setTitle] = useState('')
@@ -19,18 +19,21 @@ const App = () => {
   //const [newNoteVisible, setNewNoteVisible] = useState(false) Tarvitsee myöhemmin? Loginformiin?
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs => {
+      const blogsByLikes = [...blogs].sort((a,b) => b.likes - a.likes) //Pitäisikö järjestys päivittyä livenä?
+      setBlogs( blogsByLikes )
+    }
+
+    )
   }, [])
 
-  useEffect(() => {    
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')    
-    if (loggedUserJSON) {      
-      const user = JSON.parse(loggedUserJSON)      
-      setUser(user)      
-      blogService.setToken(user.token)    
-    }  
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
   }, [])
 
   const handleLogin = async (event) => {
@@ -70,9 +73,8 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
-        .then(returnedBlog => {
+      .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setUser(user) //En ainakaan tässä vaiheessa keksinyt/ymmärtänyt miten/voiko tämän asettaa komponentissa
         setSuccessMessage(`a new blog ${blogObject.title} by ${blogObject.author} has been added`)
 
         setTimeout(() => {
@@ -84,17 +86,23 @@ const App = () => {
   const addLike = (id, blogObject) => {
     blogService
       .update(id, blogObject)
-       .then(updatedBlog => {
+      .then(updatedBlog => {
         setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
-        setUser(user)
-       })
+      })
+  }
+
+  const removeBlog = (id) => {
+    blogService.remove(id)
+      .then(updatedBlogs => {
+        setBlogs(blogs.filter(blog => blog.id !== id))
+      })
   }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -103,7 +111,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -111,7 +119,7 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const blogFormRef = useRef()
