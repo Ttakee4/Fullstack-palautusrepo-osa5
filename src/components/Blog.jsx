@@ -25,6 +25,7 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
+      user: user
     })
     addLike(blog.id, blogObject)
   }

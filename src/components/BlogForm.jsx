@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ createBlog, user }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -12,7 +12,7 @@ const BlogForm = ({ createBlog }) => {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      user: ''
+      user: user
     })
 
     setNewTitle('')
@@ -27,6 +27,7 @@ const BlogForm = ({ createBlog }) => {
         <div>
         title:
           <input
+            data-testid='title'
             value={newTitle}
             onChange={event => setNewTitle(event.target.value)}
             placeholder='title here'
@@ -35,6 +36,7 @@ const BlogForm = ({ createBlog }) => {
         <div>
         author:
           <input
+            data-testid='author'
             value={newAuthor}
             onChange={event => setNewAuthor(event.target.value)}
             placeholder='author here'
@@ -43,6 +45,7 @@ const BlogForm = ({ createBlog }) => {
         <div>
         url:
           <input
+            data-testid='url'
             value={newUrl}
             onChange={event => setNewUrl(event.target.value)}
             placeholder='url here'
